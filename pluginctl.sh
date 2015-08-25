@@ -7,10 +7,8 @@
 
 PLUGIN_PATH=/opt/newrelic/newrelic_unix_plugin
 
-# AIX:
-# PLUGIN_JAVA_HOME=/usr/java6
-# LINUX & SOLARIS:
-PLUGIN_JAVA_HOME=/usr
+PLUGIN_JAVA_HOME=`which java 2>/dev/null`
+[ -z "${PLUGIN_JAVA_HOME}" ] && echo "java not in the PATH" && exit 1
 
 ### Do not change these unless instructed!
 
@@ -73,7 +71,7 @@ start_plugin() {
 	fi
 	
 	echo "Starting $PLUGIN_NAME"
-	nohup $PLUGIN_JAVA_HOME/bin/java $PLUGIN_JAVA_OPTS $PLUGIN_JAVA_CLASS > $PLUGIN_LOG_FILE 2>&1 &
+	nohup $PLUGIN_JAVA_HOME $PLUGIN_JAVA_OPTS $PLUGIN_JAVA_CLASS > $PLUGIN_LOG_FILE 2>&1 &
 	PID=`echo $!`
 	if [ -z $PID ]; then
     	echo "$PLUGIN_NAME failed to start"
